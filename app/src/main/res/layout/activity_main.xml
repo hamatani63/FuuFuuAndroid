@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tyfkda.gawanativeandroid.MainActivity" >
+
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:padding="16dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<TextView-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:text="censor value(Native) : "-->
+            <!--android:textSize="24sp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/textView"-->
+            <!--android:textColor="@android:color/black"-->
+            <!--android:text="close"-->
+            <!--android:textSize="24sp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
+    <!--</LinearLayout>-->
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/physicaloidStart"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:padding="16dp"
+        android:text="OPEN"
+        android:textSize="24sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        />
+
+    <!--<Button-->
+        <!--android:id="@+id/nToW_Btn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="88dp"-->
+        <!--android:padding="16dp"-->
+        <!--android:text="Native to Web"-->
+        <!--android:textSize="24sp"-->
+        <!--android:textColor="@android:color/holo_blue_dark"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--/>-->
+
+</LinearLayout>
