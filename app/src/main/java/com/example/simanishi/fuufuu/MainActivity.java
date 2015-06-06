@@ -66,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button serialWriteBtn = (Button) findViewById(R.id.serialWrite);
+        serialWriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = "111";
+                byte[] buf = value.getBytes();
+                mPhysicaloid.write(buf, buf.length);
+                Log.d("SERIAL", "serial");
+            }
+        });
         // フーフー送信
         //nToW_Btn.setOnClickListener(new View.OnClickListener() {
         //    @Override
