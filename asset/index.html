@@ -42,10 +42,19 @@
                 //入力の風のカウンター
                 var max = 50;
 
-                ds.stream().sort("d esc").next(function(err, datas) {
+              ds.stream().sort('desc').next(function(err, data) {
+                  console.log(data[0].id);
+              });
+
+              ds.get('iaky2cm6z6z5w6a',function(err, data) {
+                  console.log(data);
+              });
+
+                ds.stream().sort("desc").size(999).next(function(err, datas) {
                 // console.log('data.lengths'+ datas.length);
                 // console.log(datas[49]);
                 primaryId = datas.length;
+                console.log("primaryId", primaryId);
                 function getData(){
                   datas.forEach(function(data) {
                       // console.log(data.value);
