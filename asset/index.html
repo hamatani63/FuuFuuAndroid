@@ -2,129 +2,50 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <title>Title</title>
+    <title>お父さんフーフーして　V2</title>
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <style>
-      #censorLabel {
-        font-size: 24px;
-      }
-      .censorVal {
-        color: gray;
-      }
-    </style>
+    <meta property="og:title" content="お父さんフーフーしてv2.0" />
+    <meta property="og:type" content="お父さんフーフーしてv2.0" />
+    <meta property="og:description" content="お父さんフーフーしてv2.0" />
+    <link rel="stylesheet" href="common/css/style01.css" type="text/css" />
   </head>
   <body>
-
+    <h1><span id="titleName"></span> FuuFuu</h1>
+    <h2>wind power: <span id="windPower"></span></h2>
     <!-- censor NATIVE -> WEB -->
     <p id="censorLabel">censor value(NATIVE -> WEB) : <span class="censorVal nTOw">-</span></p>
     <!-- censor WEB -> NATIVE -->
     <p id="censorLabel">censor value(WEB -> NATIVE) : <span class="censorVal wTOn">111</span></p>
 
     <!-- censor WEB -> NATIVE -->
-    <button id="pushBtn">Web -> Native</button>
+    <div id="censorData" class="btnSet">
+<!--       <button id="outPutBtn" class="btn">出力</button>
+ -->      <button id="inPutBtn" class="btn">入力</button>
+           <button id="stopBtn" class="btn">入力　停止</button>
+    </div>
+
+    <div id="controller" class="btnSet">
+       <div class="postarea-text">
+          <textarea name="" id="titleVal" cols="30" rows="10" placeholder="あなたのフーフーの名前を入力"></textarea>
+        </div>
+
+      <button id="titlePostBtn" class="postarea-button">titleを決定</button>
+
+      <div class="postarea-text">
+          <textarea name="" id="searchText" cols="30" rows="10" placeholder="誰かのフーフーを検索"></textarea>
+      </div>
+      <button id="searchPutBtn" class="btn">検索</button>
+      <button id="showAllPutBtn" class="btn">すべてを表示</button>
+      <button id="hidePutBtn" class="btn">非表示</button>
+    </div>
+
+    <div id="showContent" class="content">
+        <div id="dummy"></div>
+    </div>
+
+    
     <!-- <button id="test">test</button> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://cdn.mlkcca.com/v2.0.0/milkcocoa.js"></script>
-    <script>
-        $(function() {
-          console.log(1);
-          var dataArray = [];
-          var windPowerArray = [];
-                //1.ミルクココアインスタンスを作成
-                var milkcocoa = new MilkCocoa("maxiac8gg9b.mlkcca.com");
-
-                //2."message"データストアを作成
-                var ds = milkcocoa.dataStore("windData");
-                //idナンバー
-                var primaryId;
-
-                //入力の風のカウンター
-                var max = 50;
-
-              ds.stream().sort('desc').next(function(err, data) {
-                  console.log(data[0].id);
-              });
-
-              ds.get('iaky2cm6z6z5w6a',function(err, data) {
-                  console.log(data);
-              });
-
-                ds.stream().sort("desc").size(999).next(function(err, datas) {
-                // console.log('data.lengths'+ datas.length);
-                // console.log(datas[49]);
-                primaryId = datas.length;
-                console.log("primaryId", primaryId);
-                function getData(){
-                  datas.forEach(function(data) {
-                      // console.log(data.value);
-                      // console.log(data.value.title);
-                      dataArray.push(data.value);
-                      // console.log(data);
-                      // console.log(data.id+ ": " + data.value.content);
-                     
-                     });
-                   // 配列に格納
-                      // var resArray = data.value.content.split(",");
-                      var id = 49;
-                      // console.log(dataArray[id].content);
-
-                      var resArray = dataArray[id].content.split(",");
-                      // console.log(resArray);
-                      for(var i = 0; i < resArray.length; i++){
-                        console.log("resArray"+ resArray[i]);
-                        Native.showToast(resArray[i]);
-                      }
-                  }
-
-                    $("#pushBtn").click(function() {
-                      onPushMeClicked();
-                    }); 
-
-                    function onPushMeClicked() {
-                        getData();
-                        return false;
-                    }
-                });        
-        
-        function addTextNode(windPower) {
-            $(".nTOw").text(windPower);
-            //windPowerを配列に
-            //配列が50個になったら，milkcocoaに送信
-            windPowerArray.push(windPower);
-            if(windPowerArray.length == max){
-              post("androidTestWind", windPowerArray);
-              // 配列を初期化
-              windPowerArray = [];
-            }
-        }
-        // 送信テスト
-        // $("#test").click(function() {
-        //     for(var i = 0; i < max-5; i++){
-        //       addTextNode(i);
-        //     }
-        // }); 
-
-        //milkcocoaデータストアにプッシュ　引数1タイトル、引数2コンテンツ（風量）
-        function post(titleStr, wind) {
-            var titleStr = titleStr || 'androidTest'
-            //5."message"データストアにメッセージをプッシュする
-            console.log('milkcocoa push')
-            var wind = wind;
-            if (wind && wind !== "") { 
-                primaryId++;
-                ds.push({
-                    id:primaryId,
-                    title: titleStr,
-                    wind: wind,
-                    date: new Date().getTime()
-                }, function (e) {});
-            }
-        }
-
-        addTextNode('CLOSE');
-
-        console.log("dataArray.content")
-        });
-
-</script>
+    <script src="common/js/milkcocoa.js"></script>
