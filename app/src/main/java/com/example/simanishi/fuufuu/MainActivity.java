@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Physicaloid mPhysicaloid;
     String mCensorVal;
     Handler mHandler;
+    final String URL = "http://www.geocities.jp/lucky_ponies/android/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         webView = (WebView) findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(new MyJavaScriptInterface(this), "Native");
-        webView.loadUrl("http://simanishi.angry.jp/fufu.html");
+        webView.loadUrl(URL);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -76,13 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("SERIAL", "serial");
             }
         });
-        // フーフー送信
-        //nToW_Btn.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        evaluateJs(webView, "addTextNode('hi!')");
-        //    }
-        //});
 
         // Physicaloid OPEN
         pStartBtn.setOnClickListener(new View.OnClickListener() {
