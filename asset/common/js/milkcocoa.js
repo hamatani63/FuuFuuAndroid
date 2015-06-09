@@ -1,7 +1,7 @@
+//　FooFoo module
+function FooFooClass() {}
 
-
-
-var FooFoo = (function() {
+FooFooClass.prototype = (function() {
 
   // milkcocoa instance
   var milkcocoa = new MilkCocoa("maxiac8gg9b.mlkcca.com"),
@@ -19,11 +19,6 @@ var FooFoo = (function() {
       // 検用の配列
       sortDataArr = [],
       last_message = "dummy";
-
-  // initialuze
-  function _init() {
-    //init Processing
-  }
 
   // "message"データストアにメッセージをプッシュする
   function _post(titleStr, wind) {
@@ -187,8 +182,6 @@ var FooFoo = (function() {
       return Object.prototype.toString.call(obj) === '[object Array]';
   }
 
-  _init();
-
   //return API
   return {
     post:  _post,
@@ -211,29 +204,31 @@ var FooFoo = (function() {
 
 $(function() {
 
+  var f = new FooFooClass();
+
   //入力ボタンのクリック
   $("#inPutBtn").click(function() {
         console.log("input");
-        FooFoo.startWind();
+        f.startWind();
   });
   //入力　停止ボタンのクリック
   $("#stopBtn").click(function() {
         console.log("stop");
-        FooFoo.stopWind();
-        FooFoo.getAllDate();
+        f.stopWind();
+        f.getAllDate();
   });
 
   //titleを決定ボタンのクリック
   $("#titlePostBtn").click(function() {
         console.log("titlePostBtn");
-        FooFoo.setTitle();
+        f.setTitle();
   });
 
   //検索ボタンのクリック
   $("#searchPutBtn").click(function() {
         console.log("searchPutBtn");
         var searchStr = $('#searchText').val();
-        FooFoo.getSortData(searchStr);
+        f.getSortData(searchStr);
   });
 
   //すべてを表示ボタンのクリック
@@ -241,13 +236,13 @@ $(function() {
         // console.log("showAllPutBtn");
         // var message = { id: '1' , name: '加藤貴司' };
         // _renderMessage(message);
-        FooFoo.getAllDate();
+        f.getAllDate();
   });
 
   //非表示ボタンのクリック
   $("#hidePutBtn").click(function() {
         // console.log("hidePutBtn");
-        FooFoo.resetHTML();
+        f.resetHTML();
   });
 
     //////////今西さんのデータ
