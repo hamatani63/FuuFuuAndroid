@@ -1,32 +1,70 @@
-int sensorValue; 
- 
-void setup() 
-{ 
+#include <Adafruit_NeoPixel.h>
+#include <avr/power.h>
+
+#define LED_PIN 3
+#define MOTOR_PIN 10
+
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(1, LED_PIN, NEO_GRB + NEO_KHZ800);
+int incomingByte = 0;
+
+// control a fan with PWM.
+// pwmWidth * pwmRepeatTimes make almost 1 second.
+int pwmRepeatTimes = 20000;
+int pwmWidth = 36;
+int pwmOffset = 4;
+
+void setup() {
+  // setup a LED (neopixel)
+  strip.begin();
+  strip.show();
+  // moter driver pin
+  pinMode(MOTOR_PIN, OUTPUT);
   Serial.begin(9600);
-  pinMode(2, OUTPUT);
-} 
- 
-void loop() 
-{ 
-  
-  //write
-  sensorValue = analogRead(A0);
-  Serial.print("s"); 
-  Serial.print(sensorValue, DEC);
-  Serial.print("\r"); 
-  delay(100);
-  
-  //read
-  int input;
-  input = Serial.read();
+}
+
+void loop() {
   
   // rotate the fan
-  if(input > 0){
-    digitalWrite(MOTOR_PIN, HIGH);
-    delay(100);
-    digitalWrite(MOTOR_PIN, LOW);
-    delay(100);
+  if(Serial.available() > 0){
+    incomingByte = Serial.read();
+    
+    // control the LED
+    strip.setPixelColor(0, Wheel(map(incomingByte, 0, 255, 128, 255)));
+    strip.show();
+
+    // control the Fan
+    int pwmStrength = map(incomingByte, 0, 255, pwmOffset, pwmWidth);
+    for (int i=0; i<pwmRepeatTimes; i++){
+      digitalWrite(MOTOR_PIN, HIGH);
+      delayMicroseconds(pwmStrength);
+      digitalWrite(MOTOR_PIN, LOW);
+      delayMicroseconds(pwmWidth-pwmStrength);
+    }
+    
+    // say what you got:
+    //Serial.print("I received: ");
+    //Serial.println(incomingByte, DEC);
+    
+    delay(10);
   }
-  delay(100);
- 
-} 
+  
+  strip.setPixelColor(0, 0);
+  strip.show();
+
+}
+
+
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
+  if(WheelPos < 85) {
+   return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  } else if(WheelPos < 170) {
+    WheelPos -= 85;
+   return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  } else {
+   WheelPos -= 170;
+   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  }
+}
