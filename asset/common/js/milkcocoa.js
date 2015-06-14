@@ -16,19 +16,31 @@ FooFooClass.prototype = (function() {
       windInterval,
       // title入力用の変数
       setTitleStr = '',
-      // 検用の配列
+      // name入力用の変数
+      setNameStr = '',
+      // 検索用の配列
       sortDataArr = [],
       last_message = "dummy";
+  
+// milkcocoa定義関数pushの発火イベント監視　
+  function _keepWatch(callback){
+    ds.on("push", function(e) {
+      callback(e.value);
+      //複数接続の場合の値の変化に対応するため、変更された段階でprimaryIdを取得
+      _dsStream();
+    });
+  }
+ 
 
   // "message"データストアにメッセージをプッシュする
-  function _post(titleStr, wind) {
-    var titleStr = titleStr || 'androidTest';
-    var name = '名無しさん';
-    console.log('milkcocoa push')
+  function _post(titleStr, wind, name) {
+    var titleStr = titleStr || 'My dear';
+    var name = name || '名無しさん';
+    // console.log(name);
+    console.log('milkcocoa push');
     var wind = wind;
     if (wind && wind !== "") {
-      primaryId++;
-      console.log("primaryId", primaryId);
+      ////milkcocoa定義関数push（データストアへ挿入）
       ds.push({
         id: primaryId,
         title: titleStr,
@@ -38,14 +50,14 @@ FooFooClass.prototype = (function() {
       }, function (e) {});
     }
   }
-
+  
   // HTMLにデータを表示
   function _renderMessage(message) {
     var message_html = '<p class="post-text">' + _escapeHTML(message.wind) + '</p>';
     var date_html = '';
     var button_html = '<button class="windOutPutBtn" id = "windId' + message.id +'">OutPut</button>';
     if(message.date) {
-      date_html = '<p class="post-date">'+'id: ' + _escapeHTML(message.id) + ' ' + _escapeHTML(message.title)+' : '+ _escapeHTML( new Date(message.date).toLocaleString())+'</p>';
+      date_html = '<p class="post-date">'+'id: ' + _escapeHTML(message.id) + ', ' + _escapeHTML(message.name) + ' ' +　'「' +  _escapeHTML(message.title)+　'」' +' : '+ _escapeHTML( new Date(message.date).toLocaleString())+'</p>';
     }
     $("#"+last_message).before('<div id="'+message.id+'" class="post">'+ button_html + message_html + date_html +'</div>');
     //$("#"+last_message).before('<div id="'+message.id+'" class="post">'+ _escapeHTML(message.name) +'</div>');
@@ -83,9 +95,10 @@ FooFooClass.prototype = (function() {
 
   // データストアからメッセージを取ってくる
   function _dsStream(callback) {
+    var callback = callback || function(){ return };//引数なし
     ds.stream().sort("desc").size(999).next(function(err, datas) {
-          // console.log('data.lengths'+ datas.length);
-          primaryId = datas.length
+          console.log('primaryId登録'+ datas.length);
+          primaryId = datas.length;
           datas.forEach(function(data) {
               callback(data.value);
               // console.log(data.value.title);
@@ -108,7 +121,12 @@ FooFooClass.prototype = (function() {
               ////////////////
               // 正規表現によりsortStrが含まれているかを判定
               var re = new RegExp(sortStr, "i");
-              if(data.value.title.match(re)){
+              //Stringへキャスト
+              var nameStr = String(data.value.name);
+              var titleStr = String(data.value.title);
+              //titleかnameに文字が含まれていたら
+              if(titleStr.match(re) || nameStr.match(re)){
+                  console.log(typeof data.value.title);
                   sortDataArr.push(data);
                   _renderMessage(sortDataArr[sortArrNum].value);
                   sortArrNum++ ;
@@ -118,7 +136,7 @@ FooFooClass.prototype = (function() {
           });
           if(sortDataArr.length == 0){
               console.log('そんなのないみたい。');
-              alert('そんなのないみたい。')
+              alert('そんなのないみたい。');
           }
       });
   }
@@ -131,8 +149,9 @@ FooFooClass.prototype = (function() {
     $("#windPower").text(windPower);
     $(".nTOw").text(windPower);
       //windPowerを配列に
-      //配列が50個になったら，milkcocoaに送信
+      //配列がmax個になったら，milkcocoaに送信
       windPowerArray.push(windPower);
+      //配列がmax個になったら、stop
       if(windPowerArray.length == max){
         _stopWind();
       }
@@ -152,8 +171,18 @@ FooFooClass.prototype = (function() {
   }
 
   function _stopWind() {
-    // milkcocoaに送信
-    _post(setTitleStr, windPowerArray);
+    //your nameをセット
+    setNameStr = '';
+    //現在のprimaryIdを取得
+      _dsStream();
+    //入力値が空であった場合はデータストアに送信しない
+    if(windPowerArray.length>0){
+      // milkcocoaに送信
+      _post(setTitleStr, windPowerArray, setNameStr);
+    }else{
+      alert('入力値がありません');
+    }
+    
     clearInterval(windInterval);
     // 送信用のwind配列を初期化
     windPowerArray = [];
@@ -184,6 +213,7 @@ FooFooClass.prototype = (function() {
 
   //return API
   return {
+    keepWatch: _keepWatch,
     post:  _post,
     renderMessage: _renderMessage,
     resetHTML: _resetHTML,
@@ -197,7 +227,7 @@ FooFooClass.prototype = (function() {
     escapeHTML: _escapeHTML,
     outNative: _outNative,
     isArray: _isArray
-  }
+  };
 
 }());
 
@@ -245,6 +275,10 @@ $(function() {
         f.resetHTML();
   });
 
+  //初回起動時にデータ取得
+  f.getAllDate();
+  //初回起動時にmilkcocoa定義関数push(データストアに挿入)の発火イベント監視 → pushが発火時にrenderMessageのコールバック関数
+  f.keepWatch(f.renderMessage);
     //////////今西さんのデータ
     // addTextNode('CLOSE');
 });
