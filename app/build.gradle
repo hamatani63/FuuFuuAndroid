@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'AndroidManifest.xml'
+    }
 }
 
 dependencies {
@@ -24,4 +28,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile files('libs/d2xx.jar')
     compile files('libs/physicaloidlibrary.jar')
+    compile files('libs/camerafragment.jar')
+    compile files('libs/gson-2.2.4.jar')
+    compile files('libs/sensor_sdk.jar')
 }

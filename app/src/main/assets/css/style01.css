@@ -1,0 +1,53 @@
+#censorLabel {
+  font-size: 24px;
+}
+.censorVal {
+  color: gray;
+}
+
+.btnSet{
+  margin-top: 2em;
+  
+}
+
+.btn{
+  font-weight: 700;
+  margin-top: .6em;
+  margin-bottom: .6em;
+  font-size: 0.7em;
+  height: 3.85em;
+  background: #f7f7f7;
+  color: #848484;
+  cursor: pointer;
+  line-height: 3.85em;
+  border-radius: 3px;
+  text-align: center;
+  border: 1px solid #EDEDED;
+  text-decoration: none;
+  width: 8.8em;
+}
+
+.postarea-text{
+  margin-top: 0.5em;
+  width:50%;
+  /*border: 1px solid #f00;*/
+}
+
+textarea{
+  width:50%;
+  height:1em;
+}
+
+/* リスト表示 */
+.post{
+  margin-top: 2em;
+  border-bottom: 1px dotted #ccc;
+  padding: 0 1em 1em;
+  }
+.post-date {
+  font-size: .7em;
+  color: #848484;
+  text-align: right;
+  border: 0;
+  margin: 0;
+  }
