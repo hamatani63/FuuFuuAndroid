@@ -11,7 +11,7 @@ int incomingByte = 0;
 // pwmWidth * pwmRepeatTimes make almost 1 second.
 int pwmRepeatTimes = 20000;
 int pwmWidth = 36;
-int pwmOffset = 4;
+int pwmOffset = 0;
 
 void setup() {
   // setup a LED (neopixel)
@@ -29,16 +29,18 @@ void loop() {
     incomingByte = Serial.read();
     
     // control the LED
-    strip.setPixelColor(0, Wheel(map(incomingByte, 0, 255, 128, 255)));
+    strip.setPixelColor(0, Wheel(map(incomingByte, 0, 255, 170, 255)));
     strip.show();
 
     // control the Fan
-    int pwmStrength = map(incomingByte, 0, 255, pwmOffset, pwmWidth);
+    // Notice: delayMicroseconds(0) makes huge delay, which is 16000usec. 
+    // We have to use delayMicroseconds(x+1).
+    int pwmStrength = map(incomingByte, 0, 255, pwmOffset, pwmWidth);    
     for (int i=0; i<pwmRepeatTimes; i++){
       digitalWrite(MOTOR_PIN, HIGH);
-      delayMicroseconds(pwmStrength);
+      delayMicroseconds(pwmStrength+1);
       digitalWrite(MOTOR_PIN, LOW);
-      delayMicroseconds(pwmWidth-pwmStrength);
+      delayMicroseconds(pwmWidth-pwmStrength+1);
     }
     
     // say what you got:
